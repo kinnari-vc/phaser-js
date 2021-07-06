@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Animation</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script> -->
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.atlas(
+                "gems",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/tests/columns/gems.png",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/tests/columns/gems.json"
+            );
+        }
+
+        function create() {
+            const text = this.add.text(400, 40, 'Click to add frames to current Animation', {
+                    color: '#00ff00'
+                })
+                .setOrigin(0.5, 0);
+
+            //  Create an animation with 5 frames
+            this.anims.create({
+                key: 'diamond',
+                frames: this.anims.generateFrameNames('gems', {
+                    prefix: 'diamond_', //prefix in json
+                    end: 15, // total no
+                    zeroPad: 4 // no of zero
+                }),
+                repeat: -1
+            });
+
+            const group = this.add.group({
+                key: 'gems',
+                frame: 'diamond_0000',
+                frameQuantity: 4 * 4 //direct write number like 12
+            });
+
+            group.playAnimation('diamond');
+
+            Phaser.Actions.GridAlign(group.getChildren(), {
+                width: 6, //no of row
+                height: 6, // no of col
+                cellWidth: 64,
+                cellHeight: 64,
+                x: 240,
+                y: 160
+            });
+
+            this.input.once('pointerup', function() {
+
+                const diamond = this.anims.get('diamond');
+
+                //  Add in the new frames to the current animation
+                const newFrames = this.anims.generateFrameNames('gems', {
+                    prefix: 'square_',
+                    end: 14,
+                    zeroPad: 4
+                });
+
+                diamond.addFrame(newFrames);
+
+            }, this);
+        }
+    </script>
+
+</body>
+
+</html>

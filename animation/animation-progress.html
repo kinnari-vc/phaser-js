@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Animation Progress</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.atlas('gems', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/animations/diamond.png', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/animations/diamond.json');
+        }
+
+        function create() {
+            this.anims.create({
+                key: 'diamond',
+                frames: this.anims.generateFrameNames('gems', {
+                    prefix: 'diamond_',
+                    end: 15,
+                    zeroPad: 4
+                }),
+                frameRate: 16,
+                yoyo: true,
+                repeat: -1,
+                repeatDelay: 300
+            });
+
+            // this.gem is a local variable.
+            this.gem = this.add.sprite(400, 480, 'gems')
+                .play('diamond').setScale(2);
+
+            this.debug = this.add.graphics();
+
+            this.input.on('pointerdown', function() {
+                //  Every single animation in the Animation Manager will be paused:
+                if (this.anims.paused) {
+                    this.anims.resumeAll();
+                } else {
+                    this.anims.pauseAll();
+                }
+            }, this);
+        }
+
+        function update() {
+            this.debug.clear();
+
+            const size = 672;
+
+            this.debug.fillStyle(0x2d2d2d);
+            this.debug.fillRect(64, 64, size, 48);
+
+            this.debug.fillStyle(0x2dff2d);
+            this.debug.fillRect(64, 64, size * this.gem.anims.getProgress(), 48);
+        }
+    </script>
+</body>
+
+</html>

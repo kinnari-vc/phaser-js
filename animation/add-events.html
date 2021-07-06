@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Animation</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        const config = {
+            type: Phaser.AUTO,
+            parent: "phaser-example",
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.atlas(
+                "gems",
+                "https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/tests/columns/gems.png",
+                "https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/tests/columns/gems.json"
+            );
+            // Local variable
+            this.y = 160;
+        }
+
+        function create() {
+            this.add
+                .text(400, 32, "Click to create animations", {
+                    color: "#00ff00",
+                })
+                .setOrigin(0.5, 0);
+
+            console.log(Phaser)
+
+            //  Each time a new animation is added to the Animation Manager we'll call this function
+            //this.anims.on(Phaser.Animations, this.addAnimation, this);
+            this.anims.on(Phaser.Animations.Events, this.addAnimation, this);
+            //this.anims.on("./js/ADD_ANIMATION_EVENT.js", this.addAnimation, this);
+            this.i = 0;
+
+            //  Click to add an animation
+            this.input.on(
+                "pointerup",
+                function() {
+                    switch (this.i) {
+                        case 0:
+                            this.anims.create({
+                                key: "diamond",
+                                frames: this.anims.generateFrameNames("gems", {
+                                    prefix: "diamond_",
+                                    end: 15,
+                                    zeroPad: 4,
+                                }),
+                                repeat: -1,
+                            });
+                            break;
+
+                        case 1:
+                            this.anims.create({
+                                key: "prism",
+                                frames: this.anims.generateFrameNames("gems", {
+                                    prefix: "prism_",
+                                    end: 6,
+                                    zeroPad: 4,
+                                }),
+                                repeat: -1,
+                            });
+                            break;
+
+                        case 2:
+                            this.anims.create({
+                                key: "ruby",
+                                frames: this.anims.generateFrameNames("gems", {
+                                    prefix: "ruby_",
+                                    end: 6,
+                                    zeroPad: 4,
+                                }),
+                                repeat: -1,
+                            });
+                            break;
+
+                        case 3:
+                            this.anims.create({
+                                key: "square",
+                                frames: this.anims.generateFrameNames("gems", {
+                                    prefix: "square_",
+                                    end: 14,
+                                    zeroPad: 4,
+                                }),
+                                repeat: -1,
+                            });
+                            break;
+                    }
+                    this.i++;
+                },
+                this
+            );
+
+            function addAnimation(key) {
+                this.add.sprite(400, this.y, "gems").play(key);
+                this.y += 100;
+            }
+        }
+    </script>
+</body>
+
+</html>
