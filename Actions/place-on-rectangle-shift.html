@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rectangle Shift</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet(
+                "balls",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/balls.png", {
+                    frameWidth: 17,
+                    frameHeight: 17,
+                }
+            );
+        }
+
+        function create() {
+            this.rect = new Phaser.Geom.Rectangle(135, 250, 512, 100);
+            this.rect2 = new Phaser.Geom.Rectangle(100, 50, 600, 500);
+
+            this.group = this.add.group({
+                key: "balls",
+                frame: [0, 1, 2, 3, 4, 5],
+                frameQuantity: 10,
+            });
+            this.group2 = this.add.group({
+                key: "balls",
+                frame: [0, 1, 2, 3, 4, 5],
+                frameQuantity: 10,
+            });
+            this.tweens.add({
+                targets: this.rect,
+                x: 100,
+                y: 50,
+                width: 600,
+                height: 500,
+                delay: 2000,
+                duration: 3000,
+                ease: "Sine.easeInOut",
+                repeat: -1,
+                yoyo: true,
+            });
+            this.tweens.add({
+                targets: this.rect2,
+                x: 135,
+                y: 250,
+                width: 512,
+                height: 100,
+                delay: 2000,
+                duration: 3000,
+                ease: "Sine.easeInOut",
+                repeat: -1,
+                yoyo: true,
+            });
+        }
+        var i = 1;
+
+        function update() {
+            Phaser.Actions.PlaceOnRectangle(this.group.getChildren(), this.rect, i);
+            Phaser.Actions.PlaceOnRectangle(
+                this.group2.getChildren(),
+                this.rect2,
+                i
+            );
+            i++;
+            if (i === this.group.length) {
+                i = 0;
+            }
+        }
+    </script>
+</body>
+
+</html>

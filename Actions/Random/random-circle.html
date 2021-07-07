@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Circle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: "#2d2d2d",
+            scene: {
+                preload: preload,
+                create: create,
+            },
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image(
+                "orb",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/orb-blue.png"
+            );
+        }
+
+        function create() {
+            //  Create 300 sprites (they all start life at 0x0)
+            const group = this.add.group({
+                key: "orb",
+                frameQuantity: 300,
+            });
+            const group2 = this.add.group({
+                key: "orb",
+                frameQuantity: 300,
+            });
+            const group3 = this.add.group({
+                key: "orb",
+                frameQuantity: 300,
+            });
+            const group4 = this.add.group({
+                key: "orb",
+                frameQuantity: 300,
+            });
+            const group5 = this.add.group({
+                key: "orb",
+                frameQuantity: 300,
+            });
+
+            const circle = new Phaser.Geom.Circle(300, 150, 130);
+            this.ellipse = new Phaser.Geom.Ellipse(80, 150, 100, 200);
+            const line = new Phaser.Geom.Line(500, 50, 700, 200);
+            const rect = new Phaser.Geom.Rectangle(70, 350, 300, 100);
+            const triangle = new Phaser.Geom.Triangle.BuildEquilateral(
+                600,
+                200,
+                380
+            );
+
+            Phaser.Actions.RandomCircle(group.getChildren(), circle);
+            Phaser.Actions.RandomEllipse(group2.getChildren(), this.ellipse);
+            Phaser.Actions.RandomLine(group3.getChildren(), line);
+            Phaser.Actions.RandomRectangle(group4.getChildren(), rect);
+            Phaser.Actions.RandomTriangle(group5.getChildren(), triangle);
+        }
+    </script>
+</body>
+
+</html>

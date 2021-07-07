@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Part of Circle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: "#2d2d2d",
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+      };
+
+      const game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.image(
+          "ball",
+          "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/shinyball.png"
+        );
+      }
+
+      function create() {
+        this.group1 = this.add.group({
+          key: "ball",
+          frameQuantity: 16,
+        });
+        this.group2 = this.add.group({
+          key: "ball",
+          frameQuantity: 16,
+        });
+        this.group3 = this.add.group({
+          key: "ball",
+          frameQuantity: 16,
+        });
+        this.group4 = this.add.group({
+          key: "ball",
+          frameQuantity: 16,
+        });
+
+        Phaser.Actions.PlaceOnCircle(this.group1.getChildren(), {
+          x: 400,
+          y: 300,
+          radius: 200,
+        });
+        Phaser.Actions.PlaceOnCircle(this.group2.getChildren(), {
+          x: 400,
+          y: 300,
+          radius: 160,
+        });
+        Phaser.Actions.PlaceOnCircle(this.group3.getChildren(), {
+          x: 400,
+          y: 300,
+          radius: 120,
+        });
+        Phaser.Actions.PlaceOnCircle(this.group4.getChildren(), {
+          x: 400,
+          y: 300,
+          radius: 80,
+        });
+      }
+
+      function update() {
+        Phaser.Actions.RotateAroundDistance(
+          this.group1.getChildren(),
+          {
+            x: 400,
+            y: 300,
+          },
+          0.02,
+          200
+        );
+        Phaser.Actions.RotateAroundDistance(
+          this.group2.getChildren(),
+          {
+            x: 400,
+            y: 300,
+          },
+          0.02,
+          160
+        );
+        Phaser.Actions.RotateAroundDistance(
+          this.group3.getChildren(),
+          {
+            x: 400,
+            y: 300,
+          },
+          0.02,
+          120
+        );
+        Phaser.Actions.RotateAroundDistance(
+          this.group4.getChildren(),
+          {
+            x: 400,
+            y: 300,
+          },
+          0.02,
+          80
+        );
+      }
+    </script>
+  </body>
+</html>

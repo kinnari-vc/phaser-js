@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Place Elipse</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: "#2d2d2d",
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+      };
+      const game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.image(
+          "ball",
+          "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/shinyball.png"
+        );
+      }
+
+      function create() {
+        this.elipse = new Phaser.Geom.Ellipse(400, 300, 200, 500);
+        this.group = this.add.group({
+          key: "ball",
+          frameQuantity: 48,
+        });
+        Phaser.Actions.PlaceOnEllipse(this.group.getChildren(), this.elipse);
+        this.tweens.add({
+          targets: this.elipse,
+          width: 700,
+          height: 100,
+          delay: 1000,
+          duration: 2000,
+          ease: "Sine.easeInOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
+
+      function update() {
+        Phaser.Actions.PlaceOnEllipse(this.group.getChildren(), this.elipse);
+      }
+    </script>
+  </body>
+</html>

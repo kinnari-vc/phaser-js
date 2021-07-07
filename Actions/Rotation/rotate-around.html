@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotate Around</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: "#2d2d2d",
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet(
+                "diamonds",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/diamonds32x24x5.png", {
+                    frameWidth: 32,
+                    frameHeight: 24,
+                }
+            );
+        }
+
+        function create() {
+            this.group = this.add.group();
+            this.group2 = this.add.group();
+
+            for (var i = 0; i < 256; i++) {
+                this.group.create(
+                    Phaser.Math.Between(200, 600),
+                    Phaser.Math.Between(100, 500),
+                    "diamonds",
+                    Phaser.Math.Between(0, 4)
+                );
+            }
+            for (var j = 0; j < 256; j++) {
+                this.group2.create(
+                    Phaser.Math.Between(200, 600),
+                    Phaser.Math.Between(100, 500),
+                    "diamonds",
+                    Phaser.Math.Between(0, 4)
+                );
+            }
+        }
+
+        function update() {
+            Phaser.Actions.RotateAround(
+                this.group.getChildren(), {
+                    x: 400,
+                    y: 300,
+                }, -0.01
+            );
+            Phaser.Actions.RotateAround(
+                this.group2.getChildren(), {
+                    x: 400,
+                    y: 300,
+                },
+                0.01
+            );
+        }
+    </script>
+</body>
+
+</html>

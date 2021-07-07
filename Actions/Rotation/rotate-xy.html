@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotate X Y</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: "#2d2d2d",
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet(
+                "diamonds",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/diamonds32x24x5.png", {
+                    frameWidth: 32,
+                    frameHeight: 24,
+                }
+            );
+        }
+
+        function create() {
+            this.group = this.add.group();
+
+            for (var i = 0; i < 256; i++) {
+                this.group.create(
+                    Phaser.Math.Between(200, 600),
+                    Phaser.Math.Between(100, 500),
+                    "diamonds",
+                    Phaser.Math.Between(0, 4)
+                );
+            }
+
+            this.geomPoint = new Phaser.Geom.Point(400, 300);
+
+            this.input.on(
+                "pointermove",
+                function(pointer) {
+                    this.geomPoint.setTo(pointer.x, pointer.y);
+                    //console.log(pointer.x, pointer.y);
+                },
+                this
+            );
+        }
+
+        function update() {
+            Phaser.Actions.RotateAroundDistance(
+                this.group.getChildren(),
+                this.geomPoint,
+                0.1,
+                100
+            );
+        }
+    </script>
+</body>
+
+</html>
