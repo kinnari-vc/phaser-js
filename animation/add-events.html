@@ -30,14 +30,13 @@
         const game = new Phaser.Game(config);
 
         function preload() {
-            this.load.atlas(
-                "gems",
-                "https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/tests/columns/gems.png",
-                "https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/tests/columns/gems.json"
+            this.load.atlas('gems', "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/tests/columns/gems.png",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/tests/columns/gems.json"
             );
             // Local variable
             this.y = 160;
         }
+
 
         function create() {
             this.add
@@ -46,7 +45,7 @@
                 })
                 .setOrigin(0.5, 0);
 
-            console.log(Phaser)
+            console.log(Phaser.Animations)
 
             //  Each time a new animation is added to the Animation Manager we'll call this function
             //this.anims.on(Phaser.Animations, this.addAnimation, this);
