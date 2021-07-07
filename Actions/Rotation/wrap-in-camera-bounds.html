@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=
+    , initial-scale=1.0" />
+    <title>Wrap in camera</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: "#2d2d2d",
+            scene: {
+                create: create,
+                update: update,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+        var graphics;
+        var shapes;
+
+        function create() {
+            graphics = this.add.graphics();
+
+            shapes = new Array(15)
+                .fill(null)
+                .map(
+                    () =>
+                    new Phaser.Geom.Circle(
+                        Phaser.Math.Between(0, 800),
+                        Phaser.Math.Between(0, 600),
+                        Phaser.Math.Between(25, 75)
+                    )
+                );
+
+            this.rect = Phaser.Geom.Rectangle.Clone(this.cameras.main);
+        }
+
+        function update() {
+            shapes.forEach(function(shape, i) {
+                shape.x += 1 + 0.1 * i;
+                shape.y += 1 + 0.1 * i;
+            });
+
+            Phaser.Actions.WrapInRectangle(shapes, this.rect, 72);
+
+            draw();
+        }
+
+        // Locals methods, they are not part of Phaser.scene
+        function color(i) {
+            return 0x001100 * (i % 15) + 0x000033 * (i % 5);
+        }
+
+        function draw() {
+            graphics.clear();
+
+            shapes.forEach((shape, i) => {
+                graphics.fillStyle(color(i), 0.5).fillCircleShape(shape);
+            }, this);
+        }
+    </script>
+</body>
+
+</html>

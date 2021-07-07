@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Place On Triangle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            scene: {
+                preload: preload,
+                create: create,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image(
+                "ball",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/chunk.png"
+            );
+        }
+
+        function create() {
+            var triangle = new Phaser.Geom.Triangle.BuildEquilateral(400, 100, 380);
+            const triangle2 = new Phaser.Geom.Triangle.BuildRight(
+                200,
+                400,
+                300,
+                200
+            );
+            var as = Phaser.Geom;
+            console.log(as);
+            const group = this.add.group({
+                key: "ball",
+                frameQuantity: 64,
+            });
+            const group2 = this.add.group({
+                key: "ball",
+                frameQuantity: 64,
+            });
+
+            Phaser.Actions.PlaceOnTriangle(group.getChildren(), triangle);
+            Phaser.Actions.PlaceOnTriangle(group2.getChildren(), triangle2);
+        }
+    </script>
+</body>
+
+</html>

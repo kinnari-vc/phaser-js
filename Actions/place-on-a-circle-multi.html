@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-circle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: "#2d2d2d",
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+      };
+
+      const game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.spritesheet(
+          "balls",
+          "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/balls.png",
+          {
+            frameWidth: 17,
+            frameHeight: 17,
+          }
+        );
+      }
+
+      function create() {
+        const circle = new Phaser.Geom.Circle(400, 300, 220);
+
+        this.group = this.add.group({
+          key: "balls",
+          frame: [0, 1, 5],
+          repeat: 10,
+        });
+
+        Phaser.Actions.PlaceOnCircle(this.group.getChildren(), circle);
+
+        this.tween = this.tweens.addCounter({
+          from: 220,
+          to: 100,
+          duration: 3000,
+          delay: 2000,
+          ease: "Sine.easeInOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
+
+      function update() {
+        Phaser.Actions.RotateAroundDistance(
+          this.group.getChildren(),
+          {
+            x: 400,
+            y: 300,
+          },
+          0.02,
+          this.tween.getValue()
+        );
+      }
+    </script>
+  </body>
+</html>

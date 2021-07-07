@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wrap Ractangle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: "#2d2d2d",
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image(
+                "ball",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/shinyball.png"
+            );
+        }
+
+        function create() {
+            this.rect = new Phaser.Geom.Rectangle(100, 100, 256, 256);
+            this.group = this.add.group({
+                key: "ball",
+                frameQuantity: 32,
+            });
+
+            Phaser.Actions.RandomRectangle(this.group.getChildren(), this.rect);
+            console.log(Phaser.Actions);
+        }
+
+        function update() {
+            this.children = this.group.getChildren();
+
+            Phaser.Actions.IncXY(this.children, 1, 1);
+            Phaser.Actions.WrapInRectangle(this.children, this.rect);
+        }
+    </script>
+</body>
+
+</html>

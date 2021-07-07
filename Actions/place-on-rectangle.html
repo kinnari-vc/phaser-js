@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Place Rectangle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: "#2d2d2d",
+        parent: "phaser-example",
+        scene: {
+          preload: preload,
+          create: create,
+        },
+      };
+
+      const game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.image(
+          "ball",
+          "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/shinyball.png"
+        );
+      }
+
+      function create() {
+        const rect = new Phaser.Geom.Rectangle(100, 100, 256, 256);
+        this.group = this.add.group({
+          key: "ball",
+          frameQuantity: 32,
+        });
+        Phaser.Actions.PlaceOnRectangle(this.group.getChildren(), rect);
+      }
+    </script>
+  </body>
+</html>
