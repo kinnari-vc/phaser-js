@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Constraint</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: "matter",
+                matter: {
+                    debug: true,
+                },
+            },
+            scene: {
+                preload: preload,
+                create: create,
+            },
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image(
+                "ball",
+                "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/pangball.png"
+            );
+        }
+
+        function create() {
+            this.matter.world.setBounds();
+
+            var ballA = this.matter.add.image(420, 100, "ball", null, {
+                shape: "circle",
+                friction: 0.005,
+                restitution: 0.6,
+            });
+            var ballB = this.matter.add.image(400, 200, "ball", null, {
+                shape: "circle",
+                friction: 0.005,
+                restitution: 0.6,
+            });
+            var ballC = this.matter.add.image(450, 200, "ball", null, {
+                shape: "circle",
+                friction: 0.005,
+                restitution: 0.6,
+            });
+            //  You can create a constraint between the two bodies using a Factory function.
+            //  The value 100 is the resting length and 0.2 is the stiffness of the constraint(spring stiffness).
+
+            this.matter.add.constraint(ballA, ballB, 100, 1.5);
+            this.matter.add.constraint(ballB, ballC, 50, 0.2);
+
+            this.matter.add.mouseSpring();
+        }
+    </script>
+</body>
+
+</html>
