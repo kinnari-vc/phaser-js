@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Depth Sorting</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        const config = {
+            type: Phaser.WEBGL,
+            width: 800,
+            height: 600,
+            backgroundColor: '#2d2d2d',
+            parent: 'phaser-example',
+            pixelArt: true,
+            scene: {
+                preload: preload,
+                create: create,
+                //update: update
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet('box', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/block.png', {
+                frameWidth: 64
+            });
+            /*  this.load.spritesheet('box', ' https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/diamonds32x5.png', {
+                 frameWidth: 64
+             }); */
+        }
+
+        function create() {
+            //  Create 108 sprites in a grid so we can see them vanish easily
+            const group = this.make.group({
+                key: 'box',
+                frame: [0, 1, 2, 3, 4],
+                frameQuantity: 22,
+                max: 108
+            });
+
+            Phaser.Actions.GridAlign(group.getChildren(), {
+                width: 12,
+                height: 9,
+                cellWidth: 64,
+                cellHeight: 64,
+                x: 48,
+                y: 32
+            });
+
+            this.input.on('pointerdown', function(pointer) {
+                const child = this.children.getRandom();
+                if (child) {
+                    this.children.remove(child);
+                }
+
+            }, this);
+
+        }
+    </script>
+</body>
+
+</html>

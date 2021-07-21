@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Depth Sorting</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        const config = {
+            type: Phaser.WEBGL,
+            width: 800,
+            height: 600,
+            backgroundColor: '#2d2d2d',
+            parent: 'phaser-example',
+            scene: {
+                preload: preload,
+                create: create,
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image('block', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/block.png');
+        }
+
+        function create() {
+            //  Create a stack of blocks
+            const group = this.make.group({
+                key: 'block',
+                frameQuantity: 12
+            });
+
+            //SetXY(all-child,x-starting-pos , y-starting-pos , x+x-adding(x+64) ,y adding)
+            Phaser.Actions.SetXY(group.getChildren(), 50, 500, 64, 0);
+
+            this.input.on('pointerdown', function(pointer) {
+                const child = this.children.getAt(2);
+                child.y -= 32;
+
+                this.children.bringToTop(child);
+
+            }, this);
+        }
+    </script>
+</body>
+
+</html>
