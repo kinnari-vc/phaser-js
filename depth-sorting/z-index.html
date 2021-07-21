@@ -30,20 +30,20 @@
         const game = new Phaser.Game(config);
 
         function preload() {
-            this.load.image('ayu', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/pics/ayu2.png');
+            this.load.image('girl', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/pics/ayu2.png');
         }
 
         function create() {
-            const image1 = this.add.image(100, 300, 'ayu');
-            const image2 = this.add.image(200, 300, 'ayu');
-            const image3 = this.add.image(300, 300, 'ayu');
-            const image4 = this.add.image(400, 300, 'ayu');
-            const image5 = this.add.image(500, 300, 'ayu');
-            const image6 = this.add.image(600, 300, 'ayu');
-            const image7 = this.add.image(700, 300, 'ayu');
+            const image1 = this.add.image(100, 300, 'girl');
+            const image2 = this.add.image(200, 300, 'girl');
+            const image3 = this.add.image(300, 300, 'girl');
+            const image4 = this.add.image(400, 300, 'girl');
+            const image5 = this.add.image(500, 300, 'girl');
+            const image6 = this.add.image(600, 300, 'girl');
+            const image7 = this.add.image(700, 300, 'girl');
 
             this.input.on(Phaser.Input.Events.POINTER_DOWN, function(pointer) {
-                image3.setDepth(1);
+                image1.setDepth(1);
             }, this);
 
         }
