@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Depth Sorting</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        const config = {
+            type: Phaser.WEBGL,
+            width: 800,
+            height: 600,
+            backgroundColor: '#2d2d2d',
+            parent: 'phaser-example',
+            pixelArt: true,
+            scene: {
+                preload: preload,
+                create: create,
+                // update: update
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.atlas('isoblocks', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/atlas/isoblocks.png', 'https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/atlas/isoblocks.json');
+        }
+
+        function create() {
+            var frames = this.textures.get('isoblocks').getFrameNames();
+
+            // height and width of 
+            //  blocks are 50x50
+            var mapWidth = 30;
+            var mapHeight = 8;
+
+            // height and width of tile
+            var tileWidthHalf = 25;
+            var tileHeightHalf = 25;
+
+            var centerX = (mapWidth / 2);
+            var centerY = -100;
+
+            var blocks = [];
+
+            for (var y = 0; y < mapHeight; y++) {
+                for (var x = 0; x < mapWidth; x++) {
+                    var tx = (x - y) * tileWidthHalf;
+                    var ty = (x + y) * tileHeightHalf;
+
+                    //block-123 = green blocks
+                    var block = (x % 2 === 0) ? 'block-123' : 'block-132';
+
+                    var tile = this.add.image(centerX + tx, centerY + ty, 'isoblocks', block);
+
+                    tile.setData('row', x);
+                    tile.setData('col', y);
+
+                    tile.setDepth(centerY + ty);
+                    blocks.push(tile);
+                }
+            }
+
+
+            //moving because of this
+
+            this.tweens.add({
+
+                targets: blocks,
+
+                x: function(target, key, value) {
+
+                    return (value - (30 - (target.getData('col')) * 4));
+
+                },
+
+                y: function(target, key, value) {
+
+                    return (value - (target.getData('row') * 5));
+
+                },
+
+                yoyo: true,
+                ease: 'Sine.easeInOut',
+                repeat: -1,
+                duration: 700,
+                delay: function(target, key, value, targetIndex, totalTargets, tween) {
+
+                    return (target.getData('row') * 60) + (target.getData('col') * 60);
+
+                }
+            });
+
+            /* const cursors = this.input.keyboard.createCursorKeys();
+
+            const controlConfig = {
+                camera: this.cameras.main,
+                left: cursors.left,
+                right: cursors.right,
+                zoomIn: cursors.up,
+                zoomOut: cursors.down,
+                acceleration: 0.04,
+                drag: 0.0005,
+                maxSpeed: 0.7
+            };
+
+            this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+            this.cameras.main.zoom = 0.62;
+            this.cameras.main.scrollX = -110; */
+        }
+
+        /*  function update(time, delta) {
+             this.controls.update(delta);
+         } */
+    </script>
+</body>
+
+</html>

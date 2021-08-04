@@ -1,10 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 10</title>
+    <title>Demo</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="https://netgfx.com/trunk/games/phaser_modals/modal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
+    <!-- <script src="https://netgfx.com/trunk/games/phaser_modals/phaser.min.js"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
     <style type="text/css">
         body {
             margin: 0;
@@ -13,26 +22,49 @@
 </head>
 
 <body>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+      Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <script type="text/javascript">
         var config = {
             type: Phaser.AUTO,
-            width: 800,
-            height: 600,
+            width: 2000,
+            height: 1000,
             physics: {
-                default: 'arcade',
+                default: "arcade",
                 arcade: {
                     gravity: {
-                        y: 300
+                        y: 300,
                     },
-                    debug: false
-                }
+                    debug: false,
+                },
             },
             scene: {
                 preload: preload,
                 create: create,
-                update: update
-            }
+                update: update,
+            },
         };
 
         var player;
@@ -40,41 +72,54 @@
         var bombs;
         var platforms;
         var cursors;
+        var mouse;
         var score = 0;
         var gameOver = false;
         var scoreText;
+        var reg = {};
 
         var game = new Phaser.Game(config);
 
         function preload() {
-            this.load.image('sky', 'assets/sky.png');
-            this.load.image('ground', 'assets/platform.png');
-            this.load.image('star', 'assets/star.png');
-            this.load.image('bomb', 'assets/bomb.png');
-            this.load.spritesheet('dude', 'assets/dude.png', {
+            this.load.image("sky", "assets/sky.png");
+            this.load.image("ground", "assets/platform.png");
+            this.load.image("star", "assets/star.png");
+            this.load.image("bomb", "assets/bomb.png");
+            this.load.spritesheet("dude", "assets/dude.png", {
                 frameWidth: 32,
-                frameHeight: 48
+                frameHeight: 48,
             });
+            this.load.image("m1", "http://i221.photobucket.com/albums/dd22/djmid71/M1_zpsdprlkpno.png");
         }
 
         function create() {
             //  A simple background for our game
-            this.add.image(400, 300, 'sky');
+            reg.modal = new gameModal(game);
+            // createModals();
+            var m1 = game.add.button(30, 50, "m1", showModal2);
+
+            this.add.image(400, 300, "sky");
+            this.add.image(1000, 300, "sky");
+            this.add.image(1600, 300, "sky");
+
+            this.add.image(400, 900, "sky");
+            this.add.image(1000, 900, "sky");
+            this.add.image(1600, 900, "sky");
 
             //  The platforms group contains the ground and the 2 ledges we can jump on
             platforms = this.physics.add.staticGroup();
 
             //  Here we create the ground.
             //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-            platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+            platforms.create(400, 900, "ground").setScale(2).refreshBody();
+            platforms.create(1200, 900, "ground").setScale(2).refreshBody();
+            platforms.create(1800, 900, "ground").setScale(2).refreshBody();
 
             //  Now let's create some ledges
-            platforms.create(600, 400, 'ground');
-            platforms.create(50, 250, 'ground');
-            platforms.create(750, 220, 'ground');
+            platforms.create(1600, 700, "ground");
 
             // The player and its settings
-            player = this.physics.add.sprite(100, 450, 'dude');
+            player = this.physics.add.sprite(100, 450, "dude");
 
             //  Player physics properties. Give the little guy a slight bounce.
             player.setBounce(0.2);
@@ -82,61 +127,62 @@
 
             //  Our player animations, turning, walking left and walking right.
             this.anims.create({
-                key: 'left',
-                frames: this.anims.generateFrameNumbers('dude', {
+                key: "left",
+                frames: this.anims.generateFrameNumbers("dude", {
                     start: 0,
-                    end: 3
+                    end: 3,
                 }),
                 frameRate: 10,
-                repeat: -1
+                repeat: -1,
             });
 
             this.anims.create({
-                key: 'turn',
+                key: "turn",
                 frames: [{
-                    key: 'dude',
-                    frame: 4
-                }],
-                frameRate: 20
+                    key: "dude",
+                    frame: 4,
+                }, ],
+                frameRate: 20,
             });
 
             this.anims.create({
-                key: 'right',
-                frames: this.anims.generateFrameNumbers('dude', {
+                key: "right",
+                frames: this.anims.generateFrameNumbers("dude", {
                     start: 5,
-                    end: 8
+                    end: 8,
                 }),
                 frameRate: 10,
-                repeat: -1
+                repeat: -1,
             });
+
+            //mouse = this.input.mouse.capture;
+            mouse = this.input.mouse.manager.mousePointer;
 
             //  Input Events
             cursors = this.input.keyboard.createCursorKeys();
 
             //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
             stars = this.physics.add.group({
-                key: 'star',
+                key: "star",
                 repeat: 11,
                 setXY: {
                     x: 12,
                     y: 0,
-                    stepX: 70
-                }
+                    stepX: 70,
+                },
             });
 
             stars.children.iterate(function(child) {
-
                 //  Give each star a slightly different bounce
                 child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
             });
 
             bombs = this.physics.add.group();
 
             //  The score
-            scoreText = this.add.text(16, 16, 'score: 0', {
-                fontSize: '32px',
-                fill: '#000'
+            scoreText = this.add.text(16, 16, "score: 0", {
+                fontSize: "32px",
+                fill: "#000",
             });
 
             //  Collide the player and the stars with the platforms
@@ -148,6 +194,48 @@
             this.physics.add.overlap(player, stars, collectStar, null, this);
 
             this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+            // scale the box
+            const scaleBox = (scale) => {
+                let box = document.getElementById("exampleModal");
+                if (box) {
+                    box.style.top = "100px";
+                    box.style.left = "100px";
+                }
+            };
+
+            // initial scale
+            console.log(this.game);
+            let scale = this.game.config.width;
+            scaleBox(scale);
+
+            // stores all created phaser texts
+            let createdTexts = {};
+
+            // creates a new phaser text
+            const createText = (name, i) => {
+                let text = createdTexts[name] || this.add.text(10, 100 + 20 * i, '')
+                createdTexts[name] = text
+                return text
+            }
+
+            // add clickMe test
+            this.add
+                .text(
+                    this.cameras.main.width / 2,
+                    this.cameras.main.height / 2,
+                    "ClickMe", {
+                        fontSize: 52,
+                        "data-toggle": "modal",
+                        "data-target": "#exampleModal"
+                    }
+                )
+                .setOrigin(0.5)
+                .setInteractive()
+                .on("pointerdown", () => {
+                    let element = document.getElementById("exampleModal");
+                    element.style.display = "block";
+                });
         }
 
         function update() {
@@ -155,18 +243,45 @@
                 return;
             }
 
+            //mouse down
+            if (mouse.isDown) {
+                console.log(this.input.mousePointer.x, this.input.mousePointer.y);
+                if (this.input.mousePointer.y <= 700) {
+                    if (player.x <= this.input.mousePointer.x) {
+                        var moveInterval = setInterval(() => {
+                            player.anims.play("turn");
+                            player.setVelocityX(160);
+                            player.setVelocityY(-50);
+                            if (player.x >= this.input.mousePointer.x) {
+                                clearInterval(moveInterval);
+                            }
+                        }, 100);
+                    }
+                } else {
+                    if (player.x <= this.input.mousePointer.x) {
+                        player.anims.play("right", true);
+                        var moveInterval = setInterval(() => {
+                            player.setVelocityX(160);
+                            if (player.x >= this.input.mousePointer.x) {
+                                clearInterval(moveInterval);
+                            }
+                        }, 100);
+                    }
+                }
+            }
+
             if (cursors.left.isDown) {
                 player.setVelocityX(-160);
 
-                player.anims.play('left', true);
+                player.anims.play("left", true);
             } else if (cursors.right.isDown) {
                 player.setVelocityX(160);
 
-                player.anims.play('right', true);
+                player.anims.play("right", true);
             } else {
                 player.setVelocityX(0);
 
-                player.anims.play('turn');
+                player.anims.play("turn");
             }
 
             if (cursors.up.isDown && player.body.touching.down) {
@@ -179,24 +294,24 @@
 
             //  Add and update the score
             score += 10;
-            scoreText.setText('Score: ' + score);
+            scoreText.setText("Score: " + score);
 
             if (stars.countActive(true) === 0) {
                 //  A new batch of stars to collect
                 stars.children.iterate(function(child) {
-
                     child.enableBody(true, child.x, 0, true, true);
-
                 });
 
-                var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+                var x =
+                    player.x < 400 ?
+                    Phaser.Math.Between(400, 800) :
+                    Phaser.Math.Between(0, 400);
 
-                var bomb = bombs.create(x, 16, 'bomb');
+                var bomb = bombs.create(x, 16, "bomb");
                 bomb.setBounce(1);
                 bomb.setCollideWorldBounds(true);
                 bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
                 bomb.allowGravity = false;
-
             }
         }
 
@@ -205,12 +320,36 @@
 
             player.setTint(0xff0000);
 
-            player.anims.play('turn');
+            player.anims.play("turn");
 
             gameOver = true;
         }
-    </script>
 
+        function showModal2() {
+            reg.modal.showModal("modal2");
+        }
+
+        function createModals() {
+            reg.modal.createModal({
+                type: "modal2",
+                includeBackground: true,
+                modalCloseOnInput: true,
+                itemsArr: [{
+                    type: "text",
+                    content: "Seriously???",
+                    fontFamily: "Luckiest Guy",
+                    fontSize: 42,
+                    color: "0xFEFF49",
+                    offsetY: 50,
+                }, {
+                    type: "image",
+                    content: "gameover",
+                    offsetY: -50,
+                    contentScale: 0.6,
+                }, ],
+            });
+        }
+    </script>
 </body>
 
 </html>
